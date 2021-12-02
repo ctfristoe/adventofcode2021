@@ -1,61 +1,31 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
-	"strconv"
+
+	"github.com/ctfristoe/adventofcode/problems"
+	"github.com/ctfristoe/adventofcode/utils"
 )
 
-func CountDepthIncreases(input []int) int {
-	n := 0
-	for index, item := range input[1:] {
-		if item > input[index] {
-			n++
-		}
-	}
-	return n
-}
-
-func CountSlidingWindowIncreases(input []int) int {
-	n := 0
-	// current := input[0] + input[1] + input[2]
-	for index, item := range input[3:] {
-		if item > input[index] {
-			n++
-		}
-	}
-	return n
-}
-
-func ReadIntListFromFile(filename string) ([]int, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var inputs []int
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		num, err := strconv.Atoi(line)
-		if err != nil {
-			return nil, err
-		}
-		inputs = append(inputs, num)
-	}
-	return inputs, scanner.Err()
-}
-
 func main() {
-	input, err := ReadIntListFromFile("day1.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	answer1 := CountDepthIncreases(input)
-	answer2 := CountSlidingWindowIncreases(input)
+	printDayOneProblems()
+	printDayTwoProblems()
+}
+
+func printDayOneProblems() {
+	input := utils.ReadIntegerLines("inputs/sonar_sweep.txt")
+	answer1 := problems.CountDepthIncreases(input)
+	answer2 := problems.CountSlidingWindowIncreases(input)
 	fmt.Println("Day 1 Problem 1:", answer1)
 	fmt.Println("Day 1 Problem 2:", answer2)
+	fmt.Println()
+}
+
+func printDayTwoProblems() {
+	input := utils.ReadLines("inputs/depth.txt")
+	answer1 := problems.GetFinalPosition(input)
+	answer2 := problems.GetFinalPositionUsingAim(input)
+	fmt.Println("Day 2 Problem 1:", answer1.Horizontal*answer1.Depth)
+	fmt.Println("Day 2 Problem 2:", answer2.Horizontal*answer2.Depth)
+	fmt.Println()
 }
