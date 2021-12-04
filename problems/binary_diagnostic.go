@@ -1,7 +1,7 @@
 package problems
 
 import (
-	"fmt"
+	"log"
 	"math"
 	"strconv"
 )
@@ -10,88 +10,117 @@ type BinaryDiagnostic struct{}
 
 func (BinaryDiagnostic) DoProblemOne(filepath string) int {
 	input := ReadLines(filepath)
-	return getPowerConsumption(input)
+	mostCommonBits := getMostCommonBits(input)
+	leastCommonBits := invertBitRepresentation(mostCommonBits)
+	gamma := convertBitsToInt(mostCommonBits)
+	epsilon := convertBitsToInt(leastCommonBits)
+	return gamma * epsilon
 }
 
 func (BinaryDiagnostic) DoProblemTwo(filepath string) int {
 	input := ReadLines(filepath)
-	return getLifeSupportRating(input)
+	itemWithMostCommonBits := filterItemsByBitPrevalence(input, true, 0)
+	itemWithLeastCommonBits := filterItemsByBitPrevalence(input, false, 0)
+	O2GeneratorRating := convertBitLikeStringToInt(itemWithMostCommonBits)
+	CO2ScrubberRating := convertBitLikeStringToInt(itemWithLeastCommonBits)
+	return O2GeneratorRating * CO2ScrubberRating
 }
 
-func getLifeSupportRating(input []string) int {
-	common, uncommon := splitItemsRecursivelyIntoCommonAndUncommon(input, 0)
-	O2GeneratorRating, _ := strconv.ParseInt(common[0], 2, 64)
-	CO2ScrubberRating, _ := strconv.ParseInt(uncommon[0], 2, 64)
-	return int(O2GeneratorRating * CO2ScrubberRating)
-}
-
-func splitItemsRecursivelyIntoCommonAndUncommon(items []string, index int) ([]string, []string) {
-	common, uncommon := splitItemsIntoCommonAndUncommon(items, index)
-	if len(common) > 1 {
-		common, _ = splitItemsRecursivelyIntoCommonAndUncommon(common, index+1)
+func filterItemsByBitPrevalence(items []string, useMostCommon bool, index int) string {
+	if len(items) == 1 {
+		return items[0]
 	}
-	if len(uncommon) > 1 {
-		_, uncommon = splitItemsRecursivelyIntoCommonAndUncommon(uncommon, index+1)
-	}
-	return common, uncommon
-}
-
-func splitItemsIntoCommonAndUncommon(items []string, index int) ([]string, []string) {
-	hasZero, hasOne := splitItemsByBitAtIndex(items, index)
-	if len(hasZero) > len(hasOne) {
-		return hasZero, hasOne
+	withZero, withOne := partitionItemsByBitAtIndex(items, index)
+	zeroIsMoreCommon := len(withZero) > len(withOne)
+	if useMostCommon == zeroIsMoreCommon {
+		return filterItemsByBitPrevalence(withZero, useMostCommon, index+1)
 	} else {
-		return hasOne, hasZero
+		return filterItemsByBitPrevalence(withOne, useMostCommon, index+1)
 	}
 }
 
-func splitItemsByBitAtIndex(items []string, index int) ([]string, []string) {
-	var hasZero []string
-	var hasOne []string
-	for _, item := range items {
+func partitionItemsByBitAtIndex(items []string, index int) (withZero []string, withOne []string) {
+	for line, item := range items {
 		if item[index] == '0' {
-			hasZero = append(hasZero, item)
+			withZero = append(withZero, item)
+		} else if item[index] == '1' {
+			withOne = append(withOne, item)
 		} else {
-			hasOne = append(hasOne, item)
+			log.Fatalf("cannot parse line %d at index %d", line, index)
 		}
 	}
-	return hasZero, hasOne
+	return
 }
 
-func getPowerConsumption(input []string) int {
-	bitCount := countBitsColumnWise(input)
-	gamma, epsilon := getGammaAndEpsilonRates(bitCount)
-	return gamma * epsilon
-}
-
-func getGammaAndEpsilonRates(bitCount []int) (int, int) {
-	gamma, epsilon := 0, 0
-	significantDigit := len(bitCount) - 1
-	for idx, count := range bitCount {
-		exponent := float64(significantDigit - idx)
-		bitValue := int(math.Pow(2, exponent))
-		if count > 0 {
-			gamma += bitValue
-		} else if count < 0 {
-			epsilon += bitValue
+func getMostCommonBits(input []string) (bits []bool) {
+	zeroes, ones := countZeroesAndOnes(input)
+	for idx, countZero := range zeroes {
+		countOne := ones[idx]
+		if countZero < countOne {
+			bits = append(bits, true)
+		} else if countZero > countOne {
+			bits = append(bits, false)
+		} else {
+			log.Fatalf("equal number of '0' and '1' in column %d", idx)
 		}
 	}
-	return gamma, epsilon
+	return
 }
 
-func countBitsColumnWise(input []string) []int {
-	figures := len(input[0])
-	bitCount := make([]int, figures)
-	for ln, str := range input {
-		for idx, chr := range str {
-			if chr == '1' {
-				bitCount[idx]++
-			} else if chr == '0' {
-				bitCount[idx]--
+func countZeroesAndOnes(input []string) ([]int, []int) {
+	digits := len(input[0])
+	zeroes := make([]int, digits)
+	ones := make([]int, digits)
+	for _, str := range input {
+		bits := convertBitLikeStringToBits(str)
+		for idx, isOne := range bits {
+			if isOne {
+				zeroes[idx]++
 			} else {
-				panic(fmt.Sprintf("cannot read line %d index %d", ln, idx))
+				ones[idx]++
 			}
 		}
 	}
-	return bitCount
+	return zeroes, ones
+}
+
+func invertBitRepresentation(bits []bool) (inverted []bool) {
+	for _, isOne := range bits {
+		inverted = append(inverted, !isOne)
+	}
+	return
+}
+
+func convertBitsToInt(bits []bool) (number int) {
+	maxExponent := len(bits) - 1
+	for idx, isOne := range bits {
+		if !isOne {
+			continue
+		}
+		exponent := float64(maxExponent - idx)
+		value := math.Pow(2, exponent)
+		number += int(value)
+	}
+	return
+}
+
+func convertBitLikeStringToBits(str string) (bits []bool) {
+	for idx, chr := range str {
+		if chr == '1' {
+			bits = append(bits, true)
+		} else if chr == '0' {
+			bits = append(bits, false)
+		} else {
+			log.Fatalf("cannot parse '%s' at index %d", str, idx)
+		}
+	}
+	return
+}
+
+func convertBitLikeStringToInt(str string) int {
+	number, err := strconv.ParseInt(str, 2, 64)
+	if err != nil {
+		log.Fatalf("cannot parse %s as a bit-like string", str)
+	}
+	return int(number)
 }
