@@ -1,6 +1,8 @@
 package tests
 
-import "testing"
+import (
+	"testing"
+)
 
 func AssertEqual(t *testing.T, expected interface{}, actual interface{}) {
 	if expected != actual {

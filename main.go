@@ -28,6 +28,7 @@ func main() {
 		{problems.SonarSweep{}, "inputs/sonar_sweep.txt"},
 		{problems.Depth{}, "inputs/depth.txt"},
 		{problems.BinaryDiagnostic{}, "inputs/binary_diagnostic.txt"},
+		{problems.GiantSquid{}, "inputs/giant_squid.txt"},
 	}
 	for index, runner := range runners {
 		runner.PrintResults(index + 1)

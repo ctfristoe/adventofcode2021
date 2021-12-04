@@ -42,7 +42,7 @@ func TestDepthProblemTwo(t *testing.T) {
 	AssertEqual(t, expected, answer)
 }
 
-func TestBinaryDiagnositProblemOne(t *testing.T) {
+func TestBinaryDiagnosisProblemOne(t *testing.T) {
 	const expected = 198
 
 	problemSet := problems.BinaryDiagnostic{}
@@ -51,11 +51,29 @@ func TestBinaryDiagnositProblemOne(t *testing.T) {
 	AssertEqual(t, expected, answer)
 }
 
-func TestBinaryDiagnositProblemTwo(t *testing.T) {
+func TestBinaryDiagnosisProblemTwo(t *testing.T) {
 	const expected = 230
 
 	problemSet := problems.BinaryDiagnostic{}
 	answer := problemSet.DoProblemTwo("../inputs/binary_diagnostic_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestGiantSquidProblemOne(t *testing.T) {
+	const expected = 4512
+
+	problemSet := problems.GiantSquid{}
+	answer := problemSet.DoProblemOne("../inputs/giant_squid_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestGiantSquidProblemTwo(t *testing.T) {
+	const expected = 1924
+
+	problemSet := problems.GiantSquid{}
+	answer := problemSet.DoProblemTwo("../inputs/giant_squid_test.txt")
 
 	AssertEqual(t, expected, answer)
 }
