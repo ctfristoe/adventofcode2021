@@ -1,6 +1,18 @@
 package problems
 
-func CountDepthIncreases(input []int) int {
+type SonarSweep struct{}
+
+func (SonarSweep) DoProblemOne(filepath string) int {
+	input := ReadIntegerLines(filepath)
+	return countDepthIncreases(input)
+}
+
+func (SonarSweep) DoProblemTwo(filepath string) int {
+	input := ReadIntegerLines(filepath)
+	return countSlidingWindowIncreases(input)
+}
+
+func countDepthIncreases(input []int) int {
 	n := 0
 	for index, item := range input[1:] {
 		if item > input[index] {
@@ -10,9 +22,8 @@ func CountDepthIncreases(input []int) int {
 	return n
 }
 
-func CountSlidingWindowIncreases(input []int) int {
+func countSlidingWindowIncreases(input []int) int {
 	n := 0
-	// current := input[0] + input[1] + input[2]
 	for index, item := range input[3:] {
 		if item > input[index] {
 			n++

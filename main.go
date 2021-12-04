@@ -4,28 +4,32 @@ import (
 	"fmt"
 
 	"github.com/ctfristoe/adventofcode/problems"
-	"github.com/ctfristoe/adventofcode/utils"
 )
 
+type ProblemSet interface {
+	DoProblemOne(filepath string) int
+	DoProblemTwo(filepath string) int
+}
+
+type ProblemSetRunner struct {
+	problemSet ProblemSet
+	filepath   string
+}
+
+func (runner ProblemSetRunner) PrintResults(number int) {
+	answer1 := runner.problemSet.DoProblemOne(runner.filepath)
+	answer2 := runner.problemSet.DoProblemTwo(runner.filepath)
+	fmt.Printf("Day %d Problem 1: %d \n", number, answer1)
+	fmt.Printf("Day %d Problem 2: %d \n\n", number, answer2)
+}
+
 func main() {
-	printDayOneProblems()
-	printDayTwoProblems()
-}
-
-func printDayOneProblems() {
-	input := utils.ReadIntegerLines("inputs/sonar_sweep.txt")
-	answer1 := problems.CountDepthIncreases(input)
-	answer2 := problems.CountSlidingWindowIncreases(input)
-	fmt.Println("Day 1 Problem 1:", answer1)
-	fmt.Println("Day 1 Problem 2:", answer2)
-	fmt.Println()
-}
-
-func printDayTwoProblems() {
-	input := utils.ReadLines("inputs/depth.txt")
-	answer1 := problems.GetFinalPosition(input)
-	answer2 := problems.GetFinalPositionUsingAim(input)
-	fmt.Println("Day 2 Problem 1:", answer1.Horizontal*answer1.Depth)
-	fmt.Println("Day 2 Problem 2:", answer2.Horizontal*answer2.Depth)
-	fmt.Println()
+	runners := []ProblemSetRunner{
+		{problems.SonarSweep{}, "inputs/sonar_sweep.txt"},
+		{problems.Depth{}, "inputs/depth.txt"},
+		{problems.BinaryDiagnostic{}, "inputs/binary_diagnostic.txt"},
+	}
+	for index, runner := range runners {
+		runner.PrintResults(index + 1)
+	}
 }
