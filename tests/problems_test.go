@@ -95,3 +95,21 @@ func TestHydrothermalVentureProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestLanternfishProblemOne(t *testing.T) {
+	const expected = 5934
+
+	problemSet := problems.Lanternfish{}
+	answer := problemSet.DoProblemOne("../inputs/lanternfish_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestLanternfishProblemTwo(t *testing.T) {
+	const expected = 26984457539
+
+	problemSet := problems.Lanternfish{}
+	answer := problemSet.DoProblemTwo("../inputs/lanternfish_test.txt")
+
+	AssertEqual(t, expected, answer)
+}

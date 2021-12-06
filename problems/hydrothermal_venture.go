@@ -47,8 +47,7 @@ func (line line) isVertical() bool {
 func (line line) getPoints() []coordinate {
 	if line.isHorizontal() {
 		return generateHorizontalPoints(line.start.y, line.start.x, line.end.x)
-	}
-	if line.isVertical() {
+	} else if line.isVertical() {
 		return generateVerticalPoints(line.start.x, line.start.y, line.end.y)
 	} else {
 		return generateDiagonalPoints(line.start.x, line.start.y, line.end.x, line.end.y)

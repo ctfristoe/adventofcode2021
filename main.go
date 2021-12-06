@@ -19,8 +19,8 @@ type ProblemSetRunner struct {
 func (runner ProblemSetRunner) PrintResults(number int) {
 	answer1 := runner.problemSet.DoProblemOne(runner.filepath)
 	answer2 := runner.problemSet.DoProblemTwo(runner.filepath)
-	fmt.Printf("Day %d Problem 1: %d \n", number, answer1)
-	fmt.Printf("Day %d Problem 2: %d \n\n", number, answer2)
+	fmt.Printf("Problem %d.1: %d \n", number, answer1)
+	fmt.Printf("Problem %d.2: %d \n\n", number, answer2)
 }
 
 func main() {
@@ -30,6 +30,7 @@ func main() {
 		{problems.BinaryDiagnostic{}, "inputs/binary_diagnostic.txt"},
 		{problems.GiantSquid{}, "inputs/giant_squid.txt"},
 		{problems.HydrothermalVenture{}, "inputs/hydrothermal_venture.txt"},
+		{problems.Lanternfish{}, "inputs/lanternfish.txt"},
 	}
 	for index, runner := range runners {
 		runner.PrintResults(index + 1)

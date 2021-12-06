@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func ReadIntegerLines(filepath string) []int {
@@ -27,6 +28,18 @@ func ReadLines(filepath string) []string {
 		panic(err.Error())
 	}
 	return lines
+}
+
+func ReadCommaSeparatedIntegers(filepath string) (numbers []int) {
+	lines, err := tryReadLines(filepath)
+	if err != nil {
+		panic(err.Error())
+	}
+	for _, str := range strings.Split(lines[0], ",") {
+		number := parseInteger(str)
+		numbers = append(numbers, number)
+	}
+	return
 }
 
 func tryReadLines(filepath string) ([]string, error) {
