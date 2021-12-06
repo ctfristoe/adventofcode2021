@@ -77,3 +77,21 @@ func TestGiantSquidProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestHydrothermalVentureProblemOne(t *testing.T) {
+	const expected = 5
+
+	problemSet := problems.HydrothermalVenture{}
+	answer := problemSet.DoProblemOne("../inputs/hydrothermal_venture_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestHydrothermalVentureProblemTwo(t *testing.T) {
+	const expected = 12
+
+	problemSet := problems.HydrothermalVenture{}
+	answer := problemSet.DoProblemTwo("../inputs/hydrothermal_venture_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
