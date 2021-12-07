@@ -77,8 +77,8 @@ func mapLines(lines []line, ignoreDiagonal bool) (m map[coordinate]int) {
 }
 
 func generateDiagonalPoints(x0 int, y0 int, x1 int, y1 int) (points []coordinate) {
-	xmin, xmax := minmax(x1, x0)
-	ymin, ymax := minmax(y1, y0)
+	xmin, xmax := MinMax(x1, x0)
+	ymin, ymax := MinMax(y1, y0)
 	slope := (y1 - y0) / (x1 - x0)
 	for i := 0; i <= (xmax - xmin); i++ {
 		var x, y int
@@ -94,7 +94,7 @@ func generateDiagonalPoints(x0 int, y0 int, x1 int, y1 int) (points []coordinate
 }
 
 func generateHorizontalPoints(y int, x0 int, x1 int) (points []coordinate) {
-	x0, x1 = minmax(x0, x1)
+	x0, x1 = MinMax(x0, x1)
 	for i := x0; i <= x1; i++ {
 		points = append(points, coordinate{x: i, y: y})
 	}
@@ -102,7 +102,7 @@ func generateHorizontalPoints(y int, x0 int, x1 int) (points []coordinate) {
 }
 
 func generateVerticalPoints(x int, y0 int, y1 int) (points []coordinate) {
-	y0, y1 = minmax(y0, y1)
+	y0, y1 = MinMax(y0, y1)
 	for i := y0; i <= y1; i++ {
 		points = append(points, coordinate{x: x, y: i})
 	}
@@ -137,20 +137,4 @@ func getIntFromString(str string) int {
 		panic(fmt.Sprint("cannot parse", str))
 	}
 	return n
-}
-
-func minmax(a int, b int) (int, int) {
-	if a < b {
-		return a, b
-	} else {
-		return b, a
-	}
-}
-
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	} else {
-		return x
-	}
 }

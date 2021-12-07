@@ -113,3 +113,21 @@ func TestLanternfishProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestWhalesProblemOne(t *testing.T) {
+	const expected = 37
+
+	problemSet := problems.Whales{}
+	answer := problemSet.DoProblemOne("../inputs/whales_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestWhalesProblemTwo(t *testing.T) {
+	const expected = 168
+
+	problemSet := problems.Whales{}
+	answer := problemSet.DoProblemTwo("../inputs/whales_test.txt")
+
+	AssertEqual(t, expected, answer)
+}

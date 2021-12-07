@@ -31,6 +31,7 @@ func main() {
 		{problems.GiantSquid{}, "inputs/giant_squid.txt"},
 		{problems.HydrothermalVenture{}, "inputs/hydrothermal_venture.txt"},
 		{problems.Lanternfish{}, "inputs/lanternfish.txt"},
+		{problems.Whales{}, "inputs/whales.txt"},
 	}
 	for index, runner := range runners {
 		runner.PrintResults(index + 1)
