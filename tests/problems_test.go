@@ -131,3 +131,30 @@ func TestWhalesProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestSevenSegmentSearchProblemOne(t *testing.T) {
+	const expected = 26
+
+	problemSet := problems.SevenSegmentSearch{}
+	answer := problemSet.DoProblemOne("../inputs/seven_segment_search_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestSmokeBasinProblemOne(t *testing.T) {
+	const expected = 15
+
+	problemSet := problems.SmokeBasin{}
+	answer := problemSet.DoProblemOne("../inputs/smoke_basin_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestSmokeBasinProblemTwo(t *testing.T) {
+	const expected = 1134
+
+	problemSet := problems.SmokeBasin{}
+	answer := problemSet.DoProblemTwo("../inputs/smoke_basin_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
