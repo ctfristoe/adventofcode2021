@@ -158,3 +158,21 @@ func TestSmokeBasinProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestSyntaxScoringProblemOne(t *testing.T) {
+	const expected = 26397
+
+	problemSet := problems.SyntaxScoring{}
+	answer := problemSet.DoProblemOne("../inputs/syntax_scoring_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestSyntaxScoringProblemTwo(t *testing.T) {
+	const expected = 288957
+
+	problemSet := problems.SyntaxScoring{}
+	answer := problemSet.DoProblemTwo("../inputs/syntax_scoring_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
