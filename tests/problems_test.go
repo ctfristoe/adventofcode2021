@@ -141,6 +141,15 @@ func TestSevenSegmentSearchProblemOne(t *testing.T) {
 	AssertEqual(t, expected, answer)
 }
 
+func TestSevenSegmentSearchProblemTwo(t *testing.T) {
+	const expected = 61229
+
+	problemSet := problems.SevenSegmentSearch{}
+	answer := problemSet.DoProblemTwo("../inputs/seven_segment_search_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
 func TestSmokeBasinProblemOne(t *testing.T) {
 	const expected = 15
 
