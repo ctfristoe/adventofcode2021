@@ -35,6 +35,7 @@ func main() {
 		{problems.SevenSegmentSearch{}, "inputs/seven_segment_search.txt"},
 		{problems.SmokeBasin{}, "inputs/smoke_basin.txt"},
 		{problems.SyntaxScoring{}, "inputs/syntax_scoring.txt"},
+		{problems.DumboOctopus{}, "inputs/dumbo_octopus.txt"},
 	}
 	for index, runner := range runners {
 		runner.PrintResults(index + 1)

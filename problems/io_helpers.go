@@ -22,6 +22,18 @@ func ReadIntegerLines(filepath string) []int {
 	return intLines
 }
 
+func ReadIntegerMatrix(filepath string) [][]int {
+	lines := ReadLines(filepath)
+	numbers := make([][]int, len(lines))
+	for y, str := range lines {
+		numbers[y] = make([]int, len(str))
+		for x, r := range []rune(str) {
+			numbers[y][x] = int(r - '0')
+		}
+	}
+	return numbers
+}
+
 func ReadLines(filepath string) []string {
 	lines, err := tryReadLines(filepath)
 	if err != nil {

@@ -24,7 +24,6 @@ func (SmokeBasin) DoProblemTwo(filepath string) (product int) {
 	return sizes[len(sizes)-3] * sizes[len(sizes)-2] * sizes[len(sizes)-1]
 }
 
-type point struct{ x, y int }
 type heightmap [][]int
 
 func (hm heightmap) width() int {
@@ -35,27 +34,27 @@ func (hm heightmap) length() int {
 	return len(hm)
 }
 
-func (hm heightmap) height(p point) int {
+func (hm heightmap) height(p Point) int {
 	return hm[p.y][p.x]
 }
 
-func (hm heightmap) neighbors(p point) (neighbors []point) {
+func (hm heightmap) neighbors(p Point) (neighbors []Point) {
 	if p.x > 0 {
-		neighbors = append(neighbors, point{x: p.x - 1, y: p.y})
+		neighbors = append(neighbors, Point{x: p.x - 1, y: p.y})
 	}
 	if p.x+1 < hm.width() {
-		neighbors = append(neighbors, point{x: p.x + 1, y: p.y})
+		neighbors = append(neighbors, Point{x: p.x + 1, y: p.y})
 	}
 	if p.y > 0 {
-		neighbors = append(neighbors, point{x: p.x, y: p.y - 1})
+		neighbors = append(neighbors, Point{x: p.x, y: p.y - 1})
 	}
 	if p.y+1 < hm.length() {
-		neighbors = append(neighbors, point{x: p.x, y: p.y + 1})
+		neighbors = append(neighbors, Point{x: p.x, y: p.y + 1})
 	}
 	return
 }
 
-func (hm heightmap) isLocalMin(p point) bool {
+func (hm heightmap) isLocalMin(p Point) bool {
 	thisHeight := hm.height(p)
 	for _, other := range hm.neighbors(p) {
 		if thisHeight >= hm.height(other) {
@@ -65,13 +64,13 @@ func (hm heightmap) isLocalMin(p point) bool {
 	return true
 }
 
-func (hm heightmap) getBasinSize(p point) (size int) {
-	basin := make(map[point]bool)
+func (hm heightmap) getBasinSize(p Point) (size int) {
+	basin := make(map[Point]bool)
 	hm.addNearbyBasinPoints(p, basin)
 	return len(basin)
 }
 
-func (hm heightmap) addNearbyBasinPoints(p point, basin map[point]bool) {
+func (hm heightmap) addNearbyBasinPoints(p Point, basin map[Point]bool) {
 	basin[p] = true
 	for _, other := range hm.neighbors(p) {
 		if basin[other] {
@@ -84,12 +83,12 @@ func (hm heightmap) addNearbyBasinPoints(p point, basin map[point]bool) {
 	}
 }
 
-func (hm heightmap) getLocalMinima() (points []point) {
+func (hm heightmap) getLocalMinima() (Points []Point) {
 	for x := 0; x < hm.width(); x++ {
 		for y := 0; y < hm.length(); y++ {
-			p := point{x, y}
+			p := Point{x, y}
 			if hm.isLocalMin(p) {
-				points = append(points, p)
+				Points = append(Points, p)
 			}
 		}
 	}

@@ -8,16 +8,16 @@ import (
 const DIGITS = "0123456789"
 const LETTERS = "abcdefg"
 
-var D0 = makeSet("abcefg")
-var D1 = makeSet("cf")
-var D2 = makeSet("acdeg")
-var D3 = makeSet("acdfg")
-var D4 = makeSet("bcdf")
-var D5 = makeSet("abdfg")
-var D6 = makeSet("abdefg")
-var D7 = makeSet("acf")
-var D8 = makeSet("abcdefg")
-var D9 = makeSet("abcdfg")
+var D0 = MakeRuneSet("abcefg")
+var D1 = MakeRuneSet("cf")
+var D2 = MakeRuneSet("acdeg")
+var D3 = MakeRuneSet("acdfg")
+var D4 = MakeRuneSet("bcdf")
+var D5 = MakeRuneSet("abdfg")
+var D6 = MakeRuneSet("abdefg")
+var D7 = MakeRuneSet("acf")
+var D8 = MakeRuneSet("abcdefg")
+var D9 = MakeRuneSet("abcdfg")
 
 type SevenSegmentSearch struct{}
 
@@ -52,27 +52,27 @@ func getOutputValue(outputs []string, transl translator) (n int) {
 }
 
 func getSignalUnscrambler(signals []string) unscrambler {
-	sets := convertStringsToSortedSets(signals)
+	RuneSets := convertStringsToSortedSets(signals)
 	unscr := makePossibilitiesTracker()
 	// 1 (2 digits)
-	standardOne, scrambledOne := D1, sets[0]
+	standardOne, scrambledOne := D1, RuneSets[0]
 	unscr.prunePossibilities(standardOne, scrambledOne)
 	// 7 (3 digits)
-	standardSeven, scrambledSeven := D7, sets[1]
+	standardSeven, scrambledSeven := D7, RuneSets[1]
 	unscr.prunePossibilities(standardSeven, scrambledSeven)
 	// 4 (4 digits)
-	standardFour, scrambledFour := D4, sets[2]
+	standardFour, scrambledFour := D4, RuneSets[2]
 	unscr.prunePossibilities(standardFour, scrambledFour)
 
-	for _, scrambledTwoThreeOrFive := range sets[3:6] {
-		if scrambledOne.issubset(scrambledTwoThreeOrFive) {
+	for _, scrambledTwoThreeOrFive := range RuneSets[3:6] {
+		if scrambledOne.issubRuneSet(scrambledTwoThreeOrFive) {
 			// only three contains the same signals as one
 			unscr.prunePossibilities(D3, scrambledTwoThreeOrFive)
 		}
 	}
 
-	for _, scrambledZeroSixOrNine := range sets[6:9] {
-		if !scrambledOne.issubset(scrambledZeroSixOrNine) {
+	for _, scrambledZeroSixOrNine := range RuneSets[6:9] {
+		if !scrambledOne.issubRuneSet(scrambledZeroSixOrNine) {
 			// only six does not contain the same signals as one
 			unscr.prunePossibilities(D6, scrambledZeroSixOrNine)
 		}
@@ -95,10 +95,10 @@ func countUniqueLengthSignals(signals []string) (n int) {
 type translator map[string]int
 
 func makeTranslator(unscr unscrambler) translator {
-	digits := []set{D0, D1, D2, D3, D4, D5, D6, D7, D8, D9}
+	digits := []RuneSet{D0, D1, D2, D3, D4, D5, D6, D7, D8, D9}
 	translator := make(translator)
 	for n, digit := range digits {
-		scrambled := make(set, len(digit))
+		scrambled := make(RuneSet, len(digit))
 		for key := range digit {
 			scrambled.add(unscr[key].first())
 		}
@@ -109,13 +109,13 @@ func makeTranslator(unscr unscrambler) translator {
 
 /// mapping of digits to possible values when unscrambled
 ///  * add, contains, first, difference, intersection
-type unscrambler map[rune]set
+type unscrambler map[rune]RuneSet
 
 /// given a standard signal like (c, f) [one] and a scrambled signal like (a, g), limits possibilities
 /// accordingly. For instance, if we know that (c, f) scrambled is (a, g):
 ///   * both c and f must be either a or g, AND
 ///   * a and g cannot be any letter besides c or f
-func (unscr unscrambler) prunePossibilities(standard, scrambled set) {
+func (unscr unscrambler) prunePossibilities(standard, scrambled RuneSet) {
 	for char, possibilities := range unscr {
 		if standard.contains(char) {
 			unscr[char] = possibilities.intersection(scrambled)
@@ -129,85 +129,17 @@ func (unscr unscrambler) prunePossibilities(standard, scrambled set) {
 func makePossibilitiesTracker() unscrambler {
 	new := make(unscrambler, 8)
 	for _, digit := range LETTERS {
-		new[digit] = makeSet(LETTERS)
+		new[digit] = MakeRuneSet(LETTERS)
 	}
 	return new
 }
 
-/// set structure, pretty standard, void should use no memory
-/// methods: add, contains, first, difference, intersection
-type void struct{}
-type set map[rune]void
-
-func (s set) add(item rune) {
-	s[item] = void{}
-}
-
-func (s set) contains(item rune) bool {
-	_, found := s[item]
-	return found
-}
-
-func (s set) first() rune {
-	for item := range s {
-		return item
-	}
-	panic("empty set")
-}
-
-func (s set) difference(other set) set {
-	new := make(set)
-	for item := range s {
-		if !other.contains(item) {
-			new.add(item)
-		}
-	}
-	return new
-}
-
-func (s set) intersection(other set) set {
-	new := make(set)
-	for item := range s {
-		if other.contains(item) {
-			new.add(item)
-		}
-	}
-	return new
-}
-
-func (s set) issubset(other set) bool {
-	for item := range s {
-		if !other.contains(item) {
-			return false
-		}
-	}
-	return true
-}
-
-func (s set) toString() string {
-	var runes []rune
-	for item := range s {
-		runes = append(runes, item)
-	}
-	alphabetizeRunes(runes)
-	return string(runes)
-}
-
-/// for parsing inputs into a slice of sets
-func convertStringsToSortedSets(slice []string) []set {
+/// for parsing inputs into a slice of RuneSets
+func convertStringsToSortedSets(slice []string) []RuneSet {
 	sortByLength(slice)
-	new := make([]set, len(slice))
+	new := make([]RuneSet, len(slice))
 	for i, str := range slice {
-		new[i] = makeSet(str)
-	}
-	return new
-}
-
-/// set constructor from string
-func makeSet(str string) set {
-	new := make(set)
-	for _, char := range str {
-		new.add(char)
+		new[i] = MakeRuneSet(str)
 	}
 	return new
 }

@@ -185,3 +185,21 @@ func TestSyntaxScoringProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestDumboOctopusProblemOne(t *testing.T) {
+	const expected = 1656
+
+	problemSet := problems.DumboOctopus{}
+	answer := problemSet.DoProblemOne("../inputs/dumbo_octopus_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestDumboOctopusProblemTwo(t *testing.T) {
+	const expected = 195
+
+	problemSet := problems.DumboOctopus{}
+	answer := problemSet.DoProblemTwo("../inputs/dumbo_octopus_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
