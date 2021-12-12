@@ -203,3 +203,21 @@ func TestDumboOctopusProblemTwo(t *testing.T) {
 
 	AssertEqual(t, expected, answer)
 }
+
+func TestPassagePathingProblemOne(t *testing.T) {
+	const expected = 10
+
+	problemSet := problems.PassagePathing{}
+	answer := problemSet.DoProblemOne("../inputs/passage_pathing_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
+
+func TestPassagePathingProblemTwo(t *testing.T) {
+	const expected = 36
+
+	problemSet := problems.PassagePathing{}
+	answer := problemSet.DoProblemTwo("../inputs/passage_pathing_test.txt")
+
+	AssertEqual(t, expected, answer)
+}
